@@ -10,6 +10,23 @@
         background-color: pink;
       }
     </style>
-    <script src="/index.js"></script>
+    <script>
+      if ("geolocation" in navigator) {
+        console.log("gelocation available");
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          document.getElementById("lat").textContent = lat;
+          document.getElementById("lon").textContent = lon;
+        });
+      } else {
+        console.log("geolocation not available");
+      }
+    </script>
+    <h1>Selfie App</h1>
+    <p>
+      latitude:<span id="lat"></span>&deg;<br />
+      longitude:<span id="lon"></span>&deg;
+    </p>
   </body>
 </html>
