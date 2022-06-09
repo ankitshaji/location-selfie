@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Data retrieved</h1>
+    <style>
+      body {
+        background-color: pink;
+      }
+    </style>
+    <script>
+      //Client-side
+
+      //Get Request
+      getData();
+      async function getData() {
+        const response = await fetch("/api");
+        const data = await response.json();
+        console.log(data)
+        for (item of data) {  
+          const rootdiv = document.createElement("div");
+          const geodiv = document.createElement("div");
+          const timestamp = document.createElement("div");
+
+          //textContent over innerHtml for security
+          geodiv.textContent = ` ${item.lat}*, ${item.lon}*`;
+          const dateString = new Date(item.timestamp).toLocaleDateString();
+          timestamp.textContent = `${dateString}`;
+
+          //append takes multiple arguments
+          rootdiv.append(geodiv, timestamp);
+          document.body.append(rootdiv);
+        }
+        console.log(data);
+      }
+    </script>
+  </body>
+</html>

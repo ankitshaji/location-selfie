@@ -16,16 +16,17 @@ database.loadDatabase();
 
 //server accepts get requests
 app.get("/api", (req, res) => {
-  database.find({}, (err, docs) => {
+  database.find({}, (err, data) => {
     if (err) {
       res.end();
       console.log(err.message);
       return;
     }
-    res.json({ docs });
+    res.json({ data });
   });
 });
 
+//ERROR JSON FORMAT ISSUE
 //server accepts post requests
 app.post("/api", (req, res) => {
   console.log("Request received");
