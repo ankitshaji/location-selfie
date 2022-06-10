@@ -22,7 +22,7 @@ app.get("/api", (req, res) => {
       console.log(err.message);
       return;
     }
-    res.json({ data });
+    res.json(data);
   });
 });
 
@@ -30,13 +30,9 @@ app.get("/api", (req, res) => {
 //server accepts post requests
 app.post("/api", (req, res) => {
   console.log("Request received");
+  const data = req.body;
   const timestamp = Date.now();
-  req.body.timestamp = timestamp;
-  database.insert(req.body);
-  res.json({
-    status: "Success",
-    timestamp: req.body.timestamp,
-    latitude: req.body.lat,
-    longitude: req.body.lon,
-  });
+  data.timestamp = timestamp;
+  database.insert(data);
+  res.json(data);
 });
