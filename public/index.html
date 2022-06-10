@@ -2,51 +2,72 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
     <title>Selfie App</title>
   </head>
   <body>
     <h1>Selfie App</h1>
+    <div>
+      <a href="/">Submission page</a> |
+      <a href="/all.html">Logs page</a>
+    </div>
     <p>
       latitude:<span id="lat"></span>&deg;<br />
       longitude:<span id="lon"></span>&deg;
     </p>
-    <button id="b1">Locate</button>
+    <button id="b1">Locate</button><br/>
     <style>
       body {
         background-color: pink;
       }
+      #b1{
+       margin-bottom: 50px;
+      }
     </style>
     <script>
       //client-side
-      //button
-      document.getElementById("b1").addEventListener("click", (event) => {
-        if ("geolocation" in navigator) {
-          console.log("gelocation available");
 
-          //async callback function
-          navigator.geolocation.getCurrentPosition(async (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            document.getElementById("lat").textContent = lat;
-            document.getElementById("lon").textContent = lon;
-            const data = { lat, lon };
+      //p5.js
+      function setup() {
+        noCanvas();
+        const video = createCapture(VIDEO);
+        video.size(320, 240);
 
-            //POST Request
-            const options = {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            };
-            const response = await fetch("/api", options);
-            const json = await response.json();
-            console.log(data);
-          });
-        } else {
-          console.log("geolocation not available");
-        }
-      });
+        //button
+        document.getElementById("b1").addEventListener("click", (event) => {
+          if ("geolocation" in navigator) {
+            console.log("gelocation available");
+
+            //async callback function
+            navigator.geolocation.getCurrentPosition(async (position) => {
+              const lat = position.coords.latitude;
+              const lon = position.coords.longitude;
+              document.getElementById("lat").textContent = lat;
+              document.getElementById("lon").textContent = lon;
+
+              //convert video canvas to base64
+              video.loadPixels();
+              const image64 = video.canvas.toDataURL();
+
+              //POST Request
+              const data = { lat, lon, image64 };
+              const options = {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              };
+              const response = await fetch("/api", options);
+              const json = await response.json();
+              console.log(data);
+            });
+          } else {
+            console.log("geolocation not available");
+          }
+        });
+      }
     </script>
   </body>
 </html>
