@@ -26,7 +26,6 @@ app.get("/api", (req, res) => {
   });
 });
 
-//ERROR JSON FORMAT ISSUE
 //server accepts post requests
 app.post("/api", (req, res) => {
   console.log("Request received");
